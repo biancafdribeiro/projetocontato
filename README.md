@@ -1,7 +1,4 @@
 # projetocontato
-
-# Projeto Contato
-
 Desenvolva um programa que permita a digitação (e posterior exibição), dos dados relativos à classe "Contato" abaixo descrita:
 
 ---------------------
