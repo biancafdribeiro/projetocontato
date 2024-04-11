@@ -26,6 +26,6 @@ Implementar construtores, getter's e setter's.
 
 OBSERVAÇÕES:
 
-Utilizar a classe Data implementada durante os exemplos da aula;
-Utilizar o ano de 2024 para o cálculo da idade ou buscar alternativa para pegar, de forma automática, o ano do sistema operacional.
-Implementar uma solução que permita cadastrar e exibir uma estrutura com 5 contatos (ao exibir, informar nome, e-mail, telefone e idade).
+- Utilizar a classe Data implementada durante os exemplos da aula;
+- Utilizar o ano de 2024 para o cálculo da idade ou buscar alternativa para pegar, de forma automática, o ano do sistema operacional.
+- Implementar uma solução que permita cadastrar e exibir uma estrutura com 5 contatos (ao exibir, informar nome, e-mail, telefone e idade).
