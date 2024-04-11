@@ -1,6 +1,7 @@
 #include <iostream>
 #include <locale.h>
 #include <string>
+#include <ctime>
 using namespace std;
 
 class Data {
@@ -28,16 +29,16 @@ public:
     void setAno(int ano) {
         this->ano = ano;
     }
-    int getDia() {
+    int getDia() const {
         return this->dia;
     }
-    int getMes() {
+    int getMes() const {
         return this->mes;
     }
-    int getAno() {
+    int getAno() const {
         return this->ano;
     }
-    string getData() {
+    string getData() const {
         string sDia = to_string(this->dia);
         string sMes = to_string(this->mes);
         string sAno = to_string(this->ano);
@@ -47,7 +48,7 @@ public:
                sAno;
     }
    
-    Data* dia_seguinte() {
+    Data* dia_seguinte() const {
         Data *d1 = new Data(this->dia, this->mes, this->ano);
         int diasNoMes[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};;
         if (d1->ano%4 == 0) {
@@ -73,80 +74,92 @@ private:
     string telefone;
     Data dtnasc;
 public:
-    Contato(string email, string nome, string telefone, Data dtnasc) {
-        this->email = email;
-        this->nome = nome;
-        this->telefone = telefone;
-        this->dtnasc = dtnasc;
-    }
-   
+    Contato(string email, string nome, string telefone, const Data& dtnasc) :
+        email(email), nome(nome), telefone(telefone), dtnasc(dtnasc) {}
+
     // Construtor default
     Contato() {}
 
     // Getter e Setter para o email
-    string getEmail() {
+    string getEmail() const {
         return this->email;
     }
 
-    void setEmail(string email) {
+    void setEmail(const string& email) {
         this->email = email;
     }
 
     // Getter e Setter para o nome
-    string getNome() {
+    string getNome() const {
         return this->nome;
     }
 
-    void setNome(string nome) {
+    void setNome(const string& nome) {
         this->nome = nome;
     }
 
     // Getter e Setter para o telefone
-    string getTelefone() {
+    string getTelefone() const {
         return this->telefone;
     }
 
-    void setTelefone(string telefone) {
+    void setTelefone(const string& telefone) {
         this->telefone = telefone;
     }
 
     // Getter e Setter para a data de nascimento
-    Data getDtNasc() {
+    const Data& getDtNasc() const {
         return this->dtnasc;
     }
 
-    void setDtNasc(Data dtnasc) {
+    void setDtNasc(const Data& dtnasc) {
         this->dtnasc = dtnasc;
     }
 
     // Método para calcular a idade com base no ano de 2024
-    int idade() {
-        Data dataAtual(1, 1, 2024); // Ano de referência 2024
-        int idade = dataAtual.getAno() - this->dtnasc.getAno();
-        if (dataAtual.getMes() < this->dtnasc.getMes() ||
-            (dataAtual.getMes() == this->dtnasc.getMes() && dataAtual.getDia() < this->dtnasc.getDia())) {
+    int idade() const {
+        time_t t = time(NULL);
+        tm* timePtr = localtime(&t);
+        int anoAtual = timePtr->tm_year + 1900; // Adicionando 1900 para obter o ano atual
+        int idade = anoAtual - this->dtnasc.getAno();
+        if (timePtr->tm_mon + 1 < this->dtnasc.getMes() ||
+            (timePtr->tm_mon + 1 == this->dtnasc.getMes() && timePtr->tm_mday < this->dtnasc.getDia())) {
             idade--;
         }
         return idade;
     }
 };
 
-int main(int argc, char** argv) {
+int main() {
     // Definindo a localidade para que o método getData() funcione corretamente
     setlocale(LC_ALL, "Portuguese");
 
-    // Criando 5 contatos
-    Contato contatos[5] = {
-        Contato("email1@example.com", "Nome1", "123456789", Data(1, 1, 2000)),
-        Contato("email2@example.com", "Nome2", "987654321", Data(2, 2, 1995)),
-        Contato("email3@example.com", "Nome3", "111111111", Data(3, 3, 1990)),
-        Contato("email4@example.com", "Nome4", "222222222", Data(4, 4, 1985)),
-        Contato("email5@example.com", "Nome5", "333333333", Data(5, 5, 1980))
-    };
+    // Criando um vetor de contatos
+    Contato contatos[5];
+
+    // Entrada de dados para os contatos
+    cout << "Digite os dados dos contatos:\n";
+    for (int i = 0; i < 2; i++) {
+        cout << "Contato " << i + 1 << ":\n";
+        string nome, email, telefone;
+        int dia, mes, ano;
+        cout << "Nome: ";
+        getline(cin, nome);
+        cout << "Email: ";
+        getline(cin, email);
+        cout << "Telefone: ";
+        getline(cin, telefone);
+        cout << "Data de Nascimento (dia mês ano): ";
+        cin >> dia >> mes >> ano;
+        cin.ignore(); // Limpar o buffer de entrada
+        Data dataNasc(dia, mes, ano);
+        contatos[i] = Contato(email, nome, telefone, dataNasc);
+        cout << endl;
+    }
 
     // Exibindo os contatos com suas informações
     cout << "Lista de contatos:\n";
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 2; i++) {
         cout << "Nome: " << contatos[i].getNome() << endl;
         cout << "Email: " << contatos[i].getEmail() << endl;
         cout << "Telefone: " << contatos[i].getTelefone() << endl;
@@ -156,4 +169,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
